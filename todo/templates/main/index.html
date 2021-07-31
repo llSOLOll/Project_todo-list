@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block header %}
+ {% if g.user != None %}
+  <h1>{% block title %}Tasks{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('.create') }}">New</a>
+  {% endif %}
+ {% endif %}
+{% endblock %}
+
+{% block content %}
+
+  {% if g.user != None %}
+    {% for post in posts %}
+      <article class="post">
+        <header>
+          <div>
+            <h1>{{ post['title'] }}</h1>
+
+            <!-- ADD DUE DATE AND TIME -->
+            <div class="about">Status: {{ post.status }}</div>
+            <div class="about">Due on {{ post['due'] }}</div>
+          </div>
+          {% if g.user['id'] == post['author_id'] %}
+            <a class="action" href="{{ url_for('.update', id=post['id']) }}">Edit</a>
+          {% endif %}
+        </header>
+        <p class="body">{{ post['body'] }}</p>
+      </article>
+      {% if not loop.last %}
+        <hr>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endblock %}
